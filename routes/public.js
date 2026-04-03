@@ -8,8 +8,8 @@ const stayRoutes = require("../subRoutes/public/stayRoutes");
 const router = express.Router();
 
 
-router.use("/api/packages", packageRoutes);
-router.use("/api/stays", stayRoutes);
+router.use("/packages", packageRoutes);
+router.use("/stays", stayRoutes);
 
 
 

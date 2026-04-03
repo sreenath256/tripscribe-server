@@ -11,9 +11,9 @@ const { requireAdminAuth } = require("../middlewares/authMiddleware");
 const router = express.Router();
 
 
-router.use("/api/packages", requireAdminAuth, packageRoutes);
-router.use("/api/stays", requireAdminAuth, stayRoutes);
-router.use("/api/orders", requireAdminAuth, orderRoutes);
+router.use("/packages", packageRoutes);
+router.use("/stays", stayRoutes);
+router.use("/orders", orderRoutes);
 
 
 

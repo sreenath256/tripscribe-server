@@ -13,16 +13,19 @@ const UserSchema = new Schema(
     lastName: {
       type: String,
     },
+    username: {
+      type: String,
+      unique: true,
+    },
     email: {
       type: String,
-      required: true,
       unique: true,
     },
     password: {
       type: String,
     },
     phoneNumber: {
-      type: Number, 
+      type: Number,
     },
     dateOfBirth: {
       type: Date,
@@ -52,12 +55,12 @@ UserSchema.statics.signup = async function (
   role,
   isEmailVerified
 ) {
-  const { email, password, passwordAgain, firstName, lastName } =
+  const { username, password, passwordAgain, firstName, lastName } =
     userCredentials;
 
   if (
     !firstName ||
-    !email ||
+    !username ||
     !password ||
     !passwordAgain ||
     !role
@@ -73,18 +76,14 @@ UserSchema.statics.signup = async function (
     throw Error("Password is not match");
   }
 
-  if (!validator.isEmail(email)) {
-    throw Error("Email is not valid");
-  }
-
   if (!validator.isStrongPassword(password)) {
     throw Error("Password is not strong enough");
   }
 
   // Checking if the email is already registered.
-  const exists = await this.findOne({ email });
+  const exists = await this.findOne({ username });
   if (exists) {
-    throw Error("Email already in use");
+    throw Error("Username already in use");
   }
 
   const salt = await bcrypt.genSalt(10);
@@ -106,18 +105,14 @@ UserSchema.statics.signup = async function (
   return user;
 };
 
-UserSchema.statics.login = async function (email, password) {
-  if (!email || !password) {
+UserSchema.statics.login = async function (username, password) {
+  if (!username || !password) {
     throw Error("All fields are required");
   }
 
-  if (!validator.isEmail(email)) {
-    throw Error("Email is not valid");
-  }
-
-  let user = await this.findOne({ email });
+  let user = await this.findOne({ username });
   if (!user) {
-    throw Error("This email is not registered. Please check!");
+    throw Error("This username is not registered. Please check!");
   }
   if (!user.isActive) {
     throw Error(
@@ -151,7 +146,7 @@ UserSchema.statics.changePassword = async function (
   }
   const exists = await this.findOne({ _id });
   if (!exists) {
-    throw Error("Cannot find email");
+    throw Error("Cannot find username");
   }
 
   const match = await bcrypt.compare(currentPassword, exists.password);

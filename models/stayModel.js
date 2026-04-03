@@ -24,6 +24,10 @@ const staySchema = new mongoose.Schema({
     sellingPrice: { // Resort Selling Price (₹) – B2C Price
         type: Number,
     },
+    state: {
+        type: String,
+        required: true
+    },
     district: {
         type: String,
         required: true
@@ -32,11 +36,18 @@ const staySchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    propertyType: {
+        type: String,
+        required: true
+    },
     propertyDescription: {
         type: String,
         required: true
     },
-    images: {
+    mainImage: {
+        type: String,
+    },
+    galleryImages: {
         type: [String],
         default: []
     },
@@ -46,6 +57,10 @@ const staySchema = new mongoose.Schema({
     },
     googleMapsLink: {
         type: String
+    },
+    isActive: {
+        type: Boolean,
+        default: true
     }
 }, { timestamps: true });
 

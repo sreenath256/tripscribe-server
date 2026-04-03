@@ -8,7 +8,7 @@ const mongoose = require("mongoose");
 const app = express()
 
 // Setting up cors
-const allowedOrigins = ["http://localhost:5100"];
+const allowedOrigins = [process.env.clientURL];
 
 const corsOptions = {
     credentials: true,

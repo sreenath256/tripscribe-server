@@ -4,9 +4,10 @@ const Stay = require('../../models/stayModel');
 // Get All Stays (Public) - Filter & Pagination
 exports.getStays = async (req, res) => {
     try {
+        console.log("stays", req.query);
         const { page = 1, limit = 10, district, maxGuests, minPrice, maxPrice } = req.query;
 
-        const query = {};
+        const query = { isActive: true };
         if (district) query.district = { $regex: district, $options: 'i' };
         if (maxGuests) query.maxGuests = { $gte: maxGuests };
         // Assuming sellingPrice is what users filter by
@@ -36,7 +37,10 @@ exports.getStays = async (req, res) => {
 // Get Single Stay (Public)
 exports.getStayById = async (req, res) => {
     try {
-        const stay = await Stay.findById(req.params.id);
+        console.log("stay by id", req.params);
+        const { id } = req.params;
+        const stay = await Stay.findById(id);
+        console.log("stay", stay);
         if (!stay) return res.status(404).json({ message: "Stay not found" });
         res.status(200).json(stay);
     } catch (error) {

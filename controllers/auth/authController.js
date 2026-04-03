@@ -7,10 +7,28 @@ const createToken = (_id) => {
 };
 
 const cookieConfig = {
-  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", 
-  secure: process.env.NODE_ENV === "production", 
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+  secure: true,
   httpOnly: true,
   maxAge: 1000 * 60 * 60 * 24, // 1 day
+};
+
+const getUser = async (req, res) => {
+  try {
+    const token = req.cookies.user_token;
+
+    const { _id } = jwt.verify(token, process.env.SECRET);
+
+    if (!mongoose.Types.ObjectId.isValid(_id)) {
+      throw Error("Invalid ID!!!");
+    }
+
+    const user = await User.findOne({ _id }, { password: 0 });
+
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 };
 
 
@@ -38,19 +56,18 @@ const signUpUser = async (req, res) => {
 
 
 const loginUser = async (req, res) => {
-  const { email, password } = req.body;
+  const { username, password } = req.body;
 
-  try {
-    const user = await User.login(email, password);
+  try {
+    const user = await User.login(username, password);
+    const token = createToken(user._id);
 
-    const token = createToken(user._id);
+    res.cookie("user_token", token, cookieConfig);
+    res.status(200).json(user);
 
-    res.cookie("user_token", token, cookieConfig);
-
-    res.status(200).json(user);
-  } catch (error) {
-    res.status(401).json({ error: error.message });
-  }
+  } catch (error) {
+    res.status(401).json({ error: error.message }); 
+  }
 };
 
 const logoutUser = async (req, res) => {
@@ -130,4 +147,5 @@ module.exports = {
   logoutUser,
   editUser,
   changePassword,
+  getUser
 };
