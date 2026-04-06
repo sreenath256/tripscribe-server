@@ -9,6 +9,9 @@ const staySchema = new mongoose.Schema({
     propertyPhone: {
         type: String,
     },
+    alternativePhone: {
+        type: String,
+    },
     propertyEmail: {
         type: String,
         lowercase: true,
@@ -38,11 +41,9 @@ const staySchema = new mongoose.Schema({
     },
     propertyType: {
         type: String,
-        required: true
     },
     propertyDescription: {
         type: String,
-        required: true
     },
     mainImage: {
         type: String,

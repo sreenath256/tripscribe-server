@@ -71,6 +71,7 @@ const loginUser = async (req, res) => {
 };
 
 const logoutUser = async (req, res) => {
+  console.log("logout")
   res.clearCookie("user_token", {
     sameSite: "none",
     secure: true,
