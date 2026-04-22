@@ -2,12 +2,13 @@
 const express = require("express");
 
 
+const blogRoutes = require("../subRoutes/public/blogRoutes");
 const packageRoutes = require("../subRoutes/public/packageRoutes");
 const stayRoutes = require("../subRoutes/public/stayRoutes");
 
 const router = express.Router();
 
-
+router.use("/blogs", blogRoutes);
 router.use("/packages", packageRoutes);
 router.use("/stays", stayRoutes);
 
